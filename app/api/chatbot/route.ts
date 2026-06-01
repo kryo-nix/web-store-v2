@@ -1,22 +1,14 @@
-import {NextResponse} from "next/server";
-import {prisma} from "@/lib/prisma";
-import axios from "axios";
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import axios from 'axios';
 
-const TRIGGER_KEYWORDS = [
-  "beli",
-  "order",
-  "checkout",
-  "pembayaran",
-  "invoice",
-  "transfer",
-  "tertarik",
-];
+const TRIGGER_KEYWORDS = ['beli', 'order', 'checkout', 'pembayaran', 'invoice', 'transfer', 'tertarik'];
 
 async function sendDiscordNotification(message: string, userMessage: string) {
   const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
 
   if (!webhookUrl) {
-    console.error("Discord Webhook URL is not configured");
+    console.error('Discord Webhook URL is not configured');
     return;
   }
 
@@ -26,37 +18,35 @@ async function sendDiscordNotification(message: string, userMessage: string) {
       embeds: [
         {
           title: "Detail Pesanan/Pertanyaan",
-          color: 5814783, // Warna biru
+          color: 5814783, 
           fields: [
-            {name: "User Message", value: userMessage},
-            {name: "Bot Response", value: message},
+            { name: "User Message", value: userMessage },
+            { name: "Bot Response", value: message },
           ],
           timestamp: new Date().toISOString(),
         },
       ],
     });
   } catch (error) {
-    console.error("Discord Error:", error);
+    console.error('Discord Error:', error);
   }
 }
 
 export async function POST(req: Request) {
   try {
-    const {message, userId} = await req.json();
+    const { message, userId } = await req.json();
 
-    // 1. Check for trigger keywords
-    const hasTrigger = TRIGGER_KEYWORDS.some((keyword) =>
-      message.toLowerCase().includes(keyword),
+    const hasTrigger = TRIGGER_KEYWORDS.some(keyword => 
+      message.toLowerCase().includes(keyword)
     );
 
-    // 2. Simple Search Logic for response
     const faq = await prisma.faq.findFirst({
       where: {
         AND: [
-          {question: {contains: message, mode: "insensitive"}},
-          {isActive: true},
-        ],
-      },
+          { question: { contains: message, mode: 'insensitive' } },
+          { isActive: true }
+        ]
+      }
     });
 
     let response = "";
@@ -67,17 +57,16 @@ export async function POST(req: Request) {
       const product = await prisma.product.findFirst({
         where: {
           AND: [
-            {name: {contains: message, mode: "insensitive"}},
-            {isActive: true},
-          ],
-        },
+            { name: { contains: message, mode: 'insensitive' } },
+            { isActive: true }
+          ]
+        }
       });
 
       if (product) {
         response = `Yes, we have ${product.name}. It costs $${product.price}. You can check it here: /products/${product.slug}`;
       } else {
-        response =
-          "I'm not sure about that. Please contact our admin via WhatsApp or Telegram for more information!";
+        response = "I'm not sure about that. Please contact our admin via WhatsApp or Telegram for more information!";
       }
     }
 
@@ -85,17 +74,16 @@ export async function POST(req: Request) {
       await sendDiscordNotification(response, message);
     }
 
-    // 3. Save to History
     await prisma.chatHistory.create({
       data: {
-        userId: userId || "anonymous",
+        userId: userId || 'anonymous',
         message: message,
         response: response,
-      },
+      }
     });
 
-    return NextResponse.json({response});
+    return NextResponse.json({ response });
   } catch (error) {
-    return NextResponse.json({error: "Internal Server Error"}, {status: 500});
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
