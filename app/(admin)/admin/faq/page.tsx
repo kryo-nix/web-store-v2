@@ -16,7 +16,7 @@ export default async function FAQPage() {
     const order = parseInt(formData.get('order') as string) || 0;
     
     await prisma.faq.create({ data: { question, answer, order } });
-    redirect('/admin/faq');
+    redirect('/admin/admin/faq');
   }
 
   return (
@@ -39,7 +39,7 @@ export default async function FAQPage() {
               <p className="font-bold">{faq.question}</p>
               <p className="text-sm text-muted-foreground">{faq.answer.substring(0, 100)}...</p>
             </div>
-            <form action={async () => { 'use server'; await prisma.faq.delete({ where: { id: faq.id } }); redirect('/admin/faq'); }}>
+            <form action={async () => { 'use server'; await prisma.faq.delete({ where: { id: faq.id } }); redirect('/admin/admin/faq'); }}>
               <button className="text-destructive text-sm hover:underline">Delete</button>
             </form>
           </div>
