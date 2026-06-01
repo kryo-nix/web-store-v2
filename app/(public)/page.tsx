@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const banners = await prisma.banner.findMany({
     where: { isActive: true },
