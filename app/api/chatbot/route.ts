@@ -40,7 +40,7 @@ export async function POST(req: Request) {
       message.toLowerCase().includes(keyword)
     );
 
-    const faq = await prisma.faq.findFirst({
+    const faq = await (prisma as any).fAQ.findFirst({
       where: {
         AND: [
           { question: { contains: message, mode: 'insensitive' } },
