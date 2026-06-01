@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = 'force-dynamic';
+
 export default async function FAQPage() {
   // Pakai (prisma as any).fAQ
   const faqs = await (prisma as any).fAQ.findMany({
