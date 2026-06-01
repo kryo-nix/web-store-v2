@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { Menu, X, ShoppingCart, User } from 'lucide-react';
 import { useState } from 'react';
@@ -19,7 +21,7 @@ export default function Navbar({ settings }: { settings: any }) {
           <Link href="/products" className="text-sm font-medium hover:text-primary">Products</Link>
           <Link href="/faq" className="text-sm font-medium hover:text-primary">FAQ</Link>
           <Link href="/contact" className="text-sm font-medium hover:text-primary">Contact</Link>
-          <Link href="/admin" className="flex items-center gap-1 text-sm font-medium bg-primary text-primary-foreground px-4 py-2 rounded-full">
+          <Link href="/admin/admin" className="flex items-center gap-1 text-sm font-medium bg-primary text-primary-foreground px-4 py-2 rounded-full">
             <User size={16} /> Admin
           </Link>
         </div>
@@ -37,7 +39,7 @@ export default function Navbar({ settings }: { settings: any }) {
           <Link href="/products" onClick={() => setIsOpen(false)}>Products</Link>
           <Link href="/faq" onClick={() => setIsOpen(false)}>FAQ</Link>
           <Link href="/contact" onClick={() => setIsOpen(false)}>Contact</Link>
-          <Link href="/admin" onClick={() => setIsOpen(false)} className="font-bold text-primary">Admin Login</Link>
+          <Link href="/admin/admin" onClick={() => setIsOpen(false)} className="font-bold text-primary">Admin Login</Link>
         </div>
       )}
     </nav>
