@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { CheckCircle, ArrowLeft, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic';
+
 export default async function ProductDetailPage({
   params,
 }: {
