@@ -1,7 +1,8 @@
 import { prisma } from "@/lib/prisma";
 
 export default async function FAQPage() {
-  const faqs = await prisma.faq.findMany({
+  // Pakai (prisma as any).fAQ
+  const faqs = await (prisma as any).fAQ.findMany({
     where: { isActive: true },
     orderBy: { order: 'asc' },
   });
@@ -12,9 +13,8 @@ export default async function FAQPage() {
         <h1 className="text-4xl font-bold mb-4">Frequently Asked Questions</h1>
         <p className="text-muted-foreground">Everything you need to know about our products and services.</p>
       </div>
-
       <div className="max-w-3xl mx-auto space-y-4">
-        {faqs.map((faq) => (
+        {faqs.map((faq: any) => (
           <details key={faq.id} className="group border border-border rounded-2xl bg-card">
             <summary className="flex justify-between items-center p-6 cursor-pointer font-bold hover:text-primary transition">
               {faq.question}
@@ -25,9 +25,6 @@ export default async function FAQPage() {
             </div>
           </details>
         ))}
-        {faqs.length === 0 && (
-          <p className="text-center py-10 text-muted-foreground">No FAQs available at the moment.</p>
-        )}
       </div>
     </div>
   );
